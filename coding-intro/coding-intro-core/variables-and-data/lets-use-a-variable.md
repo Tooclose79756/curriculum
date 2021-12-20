@@ -40,6 +40,70 @@ Putting data into a variable is called **an assignment**.
 
 
 ---
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+project.group 'com.facebook.android'
+
+project.ext.name = 'Facebook-Login-Android-SDK'
+project.ext.artifactId = "facebook-login"
+project.ext.description = 'Facebook Login Android SDK'
+project.ext.url = 'https://github.com/facebook/facebook-android-sdk'
+
+dependencies {
+    def kotlin_ver = project.ext.kotlinVersion
+    // Facebook Dependencies
+    api project(':facebook-core')
+    api project(':facebook-common')
+    // Support Dependencies
+    implementation "androidx.appcompat:appcompat:${project.ext.androidxVersion}"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_ver"
+}
+
+android {
+    compileSdkVersion project.ext.compileSdk
+    buildToolsVersion project.ext.buildTools
+
+    defaultConfig {
+        minSdkVersion project.ext.minSdk
+        targetSdkVersion project.ext.targetSdk
+        consumerProguardFiles 'proguard-rules.pro'
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+        }
+    }
+
+    aaptOptions {
+        additionalParameters "--no-version-vectors"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+if (file("${rootDir}/internal/safekit-build.gradle").exists()) {
+    project.apply from: "${rootDir}/internal/safekit-build.gradle"
+}
+
+apply from: "${rootDir}/maven.gradle"
 
 ## Practice
 
